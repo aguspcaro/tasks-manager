@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/typescript",
+    "plugin:jsx-a11y/recommended",
+    "airbnb"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "@typescript-eslint/quotes": "off",
+    "quotes": ["error", "double"],
+    "react/jsx-filename-extension": ["off"],
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
+    "import/no-extraneous-dependencies": "off",
+    "comma-dangle": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/extensions": "off",
+    "react/require-default-props": "off",
+    "object-curly-newline": "off",
+    "no-restricted-exports": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "react/jsx-wrap-multilines": "off",
+    "no-unused-vars": "off",
+    "space-before-function-paren": "off",
+    "operator-linebreak": "off",
+    "react/jsx-indent": "off"
+  },
+  "ignorePatterns": ["next.config.mjs"]
+}

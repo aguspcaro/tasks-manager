@@ -1,0 +1,39 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  gap: 2px;
+  position: relative;
+}
+.errorMessage {
+  color: red;
+  font-size: 10px;
+  font-weight: 500;
+  position: absolute;
+  top: 100%;
+}
+.input {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  color: black;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: black;
+  text-align: left;
+}
+
+.leftIconContainer {
+  position: absolute;
+  right: 5px;
+  z-index: 10;
+  width: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

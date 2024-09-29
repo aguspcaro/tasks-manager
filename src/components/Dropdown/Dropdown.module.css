@@ -1,0 +1,37 @@
+.dropdownContainer {
+  position: relative;
+}
+.dropdownAction {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  background-color: red;
+}
+
+.dropdown {
+  position: absolute;
+  top: 110%;
+  z-index: 2;
+  background-color: #fff;
+  padding-inline: 10px;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.listItem {
+  padding-block: 10px;
+}
+.separator {
+  border-bottom: 1px solid #ccc;
+}
+.dropdownItemAction {
+  border: none;
+  background-color: transparent;
+  color: black;
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+}
