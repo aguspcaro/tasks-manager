@@ -33,21 +33,22 @@ function Dropdown<T>({
         {children}
       </button>
       {isOpen ? (
-        <div className={styles.dropdown}>
+        <div className={styles.dropdown} data-testid="dropdown-list">
           {list.map((item, index) => (
             <ul
               key={renderKey(item)}
+              data-testid={`dropdown-item-${renderKey(item)}`}
               className={`${styles.listItem} ${
                 list.length - 1 !== index ? styles.separator : ""
               }`}
             >
               <button
+                type="button"
                 onClick={() => {
                   onSelect(item);
                   setIsOpen(false);
                 }}
                 className={styles.dropdownItemAction}
-                type="button"
               >
                 {renderLabel(item)}
               </button>

@@ -24,27 +24,6 @@
   gap: 20px;
 }
 
-.crossIconContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 20px; /* Tamaño total del ícono */
-  width: 20px;
-  position: relative;
-}
-.crossIconLine {
-  position: absolute;
-  width: 2px; /* Ancho de la línea */
-  height: 14px; /* Largo de la línea */
-  background-color: black; /* Color de la línea */
-}
-.crossIconLineDiagonal1 {
-  transform: rotate(45deg); /* Primera línea diagonal */
-}
-
-.crossIconLineDiagonal2 {
-  transform: rotate(-45deg); /* Segunda línea diagonal */
-}
 .clearButton {
   border: none;
   background-color: transparent;

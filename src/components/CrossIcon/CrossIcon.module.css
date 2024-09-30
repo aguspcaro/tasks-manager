@@ -1,0 +1,21 @@
+.crossIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  position: relative;
+}
+.crossIconLine {
+  position: absolute;
+  width: 2px;
+  height: 14px;
+  background-color: black;
+}
+.crossIconLineDiagonal1 {
+  transform: rotate(45deg);
+}
+
+.crossIconLineDiagonal2 {
+  transform: rotate(-45deg);
+}

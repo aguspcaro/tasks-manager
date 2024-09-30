@@ -82,7 +82,7 @@ function History() {
                     onChange(e.target.value);
                   }}
                   value={value ?? ""}
-                  leftIcon={
+                  rightIcon={
                     <button
                       type="button"
                       className={styles.clearButton}
@@ -117,7 +117,7 @@ function History() {
                     placeholder="Filtrar por estado"
                     value={value ?? ""}
                     readOnly
-                    leftIcon={
+                    rightIcon={
                       <IconButton
                         onClick={(e) => {
                           e?.stopPropagation();

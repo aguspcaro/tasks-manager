@@ -5,11 +5,11 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label?: string;
   errorText?: string;
-  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, errorText, leftIcon, ...rest }, ref) => (
+  ({ label, errorText, rightIcon, ...rest }, ref) => (
     <div className={styles.inputContainer}>
       {label ? (
         <label className={styles.label} htmlFor={rest.name}>
@@ -17,6 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </label>
       ) : undefined}
       <input
+        id={rest.name}
         ref={ref}
         className={styles.input}
         aria-autocomplete="none"
@@ -24,8 +25,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         autoCorrect="off"
         {...rest}
       />
-      {leftIcon ? (
-        <div className={styles.leftIconContainer}>{leftIcon}</div>
+      {rightIcon ? (
+        <div className={styles.rightIconContainer}>{rightIcon}</div>
       ) : undefined}
       {errorText ? (
         <span className={styles.errorMessage}>{errorText}</span>

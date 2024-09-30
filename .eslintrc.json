@@ -1,4 +1,7 @@
 {
+  "env": {
+    "jest": true
+  },
   "extends": [
     "next/core-web-vitals",
     "next/typescript",
@@ -34,7 +37,9 @@
     "no-unused-vars": "off",
     "space-before-function-paren": "off",
     "operator-linebreak": "off",
-    "react/jsx-indent": "off"
+    "react/jsx-indent": "off",
+    "no-undef": "off",
+    "react/function-component-definition": "off"
   },
   "ignorePatterns": ["next.config.mjs"]
 }

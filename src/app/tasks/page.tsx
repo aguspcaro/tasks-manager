@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 import Input from "@/components/Input";
 import Dropdown from "@/components/Dropdown";
+import CrossIcon from "@/components/CrossIcon";
 
 import styles from "./page.module.css";
 
@@ -35,41 +36,7 @@ type OptionType = {
   state: string;
 };
 
-function IconButton({
-  onClick,
-  children,
-}: React.PropsWithChildren<{ onClick: (e?: React.MouseEvent) => void }>) {
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      onClick();
-    }
-  };
-  return (
-    <div
-      role="button"
-      className={styles.clearButton}
-      tabIndex={0} // Permite que el elemento sea enfocado con teclado
-      onClick={onClick}
-      onKeyDown={handleKeyDown} // Escucha eventos del teclado
-      style={{ cursor: "pointer" }}
-      aria-label="Clear selection" // Asegura que sea descriptivo para lectores de pantalla
-    >
-      {children}
-    </div>
-  );
-}
-const CrossIcon = React.memo(() => (
-  <div className={styles.crossIconContainer}>
-    <div
-      className={`${styles.crossIconLine} ${styles.crossIconLineDiagonal1}`}
-    />
-    <div
-      className={`${styles.crossIconLine} ${styles.crossIconLineDiagonal2}`}
-    />
-  </div>
-));
-
-function Tasks() {
+const Tasks = () => {
   const { deleteTask } = useFormStore();
   const allTasks = useAllTasksSelector();
 
@@ -159,7 +126,7 @@ function Tasks() {
         <section className={styles.modalContainer}>
           <div className={styles.modal}>
             <div className={styles.modalHeader}>
-              <IconButton
+              <CrossIcon
                 onClick={() =>
                   setModalStatus({
                     isOpen: false,
@@ -167,9 +134,7 @@ function Tasks() {
                     incidentId: undefined,
                   })
                 }
-              >
-                <CrossIcon />
-              </IconButton>
+              />
             </div>
 
             {modalStatus.incidentId ? undefined : (
@@ -224,17 +189,13 @@ function Tasks() {
                     onChange(e.target.value);
                   }}
                   value={value ?? ""}
-                  leftIcon={
-                    <button
-                      type="button"
-                      className={styles.clearButton}
+                  rightIcon={
+                    <CrossIcon
                       onClick={() => {
                         setValue("search", "");
                         handleOnSearch("");
                       }}
-                    >
-                      <CrossIcon />
-                    </button>
+                    />
                   }
                 />
               )}
@@ -261,16 +222,14 @@ function Tasks() {
                     placeholder="Filtrar por estado"
                     value={value ?? ""}
                     readOnly
-                    leftIcon={
-                      <IconButton
+                    rightIcon={
+                      <CrossIcon
                         onClick={(e) => {
                           e?.stopPropagation();
                           handleOnFilter("");
                           setValue("filter", "");
                         }}
-                      >
-                        <CrossIcon />
-                      </IconButton>
+                      />
                     }
                   />
                 </Dropdown>
@@ -340,6 +299,6 @@ function Tasks() {
       </main>
     </div>
   );
-}
+};
 
 export default Tasks;
