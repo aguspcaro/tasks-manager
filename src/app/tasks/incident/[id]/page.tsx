@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useParams } from "next/navigation";
 
-import { useFormStore } from "@/store/useTask";
+import { TFormData, useFormStore, useTaskSelector } from "@/store/useTask";
 import Input from "@/components/Input";
 import Dropdown from "@/components/Dropdown";
 
@@ -21,12 +22,17 @@ type OptionType = {
   state: "pending" | "completed";
 };
 
-function Home() {
-  const { setFormData } = useFormStore();
+function Incident() {
+  const { setSubTask } = useFormStore();
+  const params = useParams();
+
+  const taskById = useTaskSelector(Number(params.id));
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<OptionType | undefined>(
     undefined
   );
+
+  const [task, setTask] = useState<TFormData | null>(null);
 
   const methods = useForm<FormValues>({
     mode: "onChange",
@@ -48,7 +54,10 @@ function Home() {
       setIsLoading(true);
       try {
         if (!data) throw new Error("Formulario no válido");
-        setFormData(data);
+        setSubTask({
+          primaryTaskId: Number(params.id),
+          subTask: { ...data, primaryTaskId: Number(params.id) },
+        });
         setTimeout(() => {
           setIsLoading(false);
           reset();
@@ -58,7 +67,7 @@ function Home() {
         console.error(error);
       }
     },
-    [reset, setFormData]
+    [params.id, reset, setSubTask]
   );
 
   const handleSelectOption = (options: OptionType) => {
@@ -66,14 +75,24 @@ function Home() {
     setValue("state", options.state);
   };
 
+  useEffect(() => {
+    if (!taskById) return;
+    setTask(taskById);
+  }, [taskById]);
+
   const isDisabled = isSubmitting || !isValid || !isDirty;
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Formulario de tareas</h1>
+        <h1 className={styles.title}>Formulario de incidencias</h1>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+            <div className={styles.taskTitleContainer}>
+              <h3 className={styles.taskTitle}>Título:</h3>
+              <p className={styles.taskTitleContent}>{task?.title}</p>
+            </div>
+
             <Input
               {...register("title", {
                 required: "Este campo es obligatorio",
@@ -123,4 +142,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Incident;

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { useFormStore } from "@/store/formState";
+import { useFormStore, useTaskSelector } from "@/store/useTask";
 import Input from "@/components/Input";
 import Dropdown from "@/components/Dropdown";
 import styles from "./page.module.css";
@@ -24,8 +24,10 @@ type OptionType = {
 };
 
 function Tasks() {
-  const { formData, updateTask } = useFormStore();
+  const { updateTask } = useFormStore();
   const params = useParams();
+  const taskById = useTaskSelector(Number(params.id));
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<OptionType | undefined>(
     undefined
@@ -81,28 +83,25 @@ function Tasks() {
   };
 
   useEffect(() => {
-    if (formData) {
-      const taskFound = formData.find((item) => item.id === Number(params.id));
-      if (taskFound) {
-        setValue("title", taskFound.title);
-        setValue("description", taskFound.description);
-        setValue("state", taskFound.state);
-        setSelectedOption(
-          taskFound.state === "pending"
-            ? {
-                id: 0,
-                name: "Pendiente",
-                state: "pending",
-              }
-            : {
-                id: 1,
-                name: "Completado",
-                state: "completed",
-              }
-        );
-      }
+    if (taskById) {
+      setValue("title", taskById.title);
+      setValue("description", taskById.description);
+      setValue("state", taskById.state);
+      setSelectedOption(
+        taskById.state === "pending"
+          ? {
+              id: 0,
+              name: "Pendiente",
+              state: "pending",
+            }
+          : {
+              id: 1,
+              name: "Completado",
+              state: "completed",
+            }
+      );
     }
-  }, [formData, params, setValue]);
+  }, [setValue, taskById]);
 
   const isDisabled = isSubmitting || !isValid || !isDirty;
 

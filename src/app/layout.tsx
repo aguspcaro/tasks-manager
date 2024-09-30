@@ -38,6 +38,9 @@ export default function RootLayout({
             <Link href="/tasks">
               <p className={styles.nextPageText}>Tareas</p>
             </Link>
+            <Link href="/history">
+              <p className={styles.nextPageText}>Historial</p>
+            </Link>
           </div>
         </nav>
         {children}

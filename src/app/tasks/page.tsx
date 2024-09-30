@@ -1,10 +1,11 @@
+/* eslint-disable react/jsx-curly-newline */
 /* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { TFormData, useFormStore } from "@/store/formState";
+import { TFormData, useAllTasksSelector, useFormStore } from "@/store/useTask";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -69,13 +70,16 @@ const CrossIcon = React.memo(() => (
 ));
 
 function Tasks() {
-  const { formData, deleteTask } = useFormStore();
+  const { deleteTask } = useFormStore();
+  const allTasks = useAllTasksSelector();
+
   const [data, setData] = useState<TFormData[]>([]);
   const [dataSearched, setDataSearched] = useState<TFormData[]>([]);
   const [dataFiltered, setDataFiltered] = useState<TFormData[]>([]);
   const [modalStatus, setModalStatus] = useState<{
     isOpen: boolean;
     id: number | null;
+    incidentId?: number;
   }>({ isOpen: false, id: null });
 
   const router = useRouter();
@@ -87,7 +91,7 @@ function Tasks() {
       if (!searchValue && dataFiltered.length > 0) {
         setData(dataFiltered);
       } else if (!searchValue) {
-        setData(formData);
+        setData(allTasks);
         setDataSearched([]);
       } else {
         const filteredData = data.filter(
@@ -105,27 +109,37 @@ function Tasks() {
   const handleOnFilter = useCallback(
     (value: OptionType["state"]) => {
       if (!value) {
-        setData(dataSearched.length > 0 ? dataSearched : formData);
+        setData(dataSearched.length > 0 ? dataSearched : allTasks);
         setDataFiltered([]);
       } else {
         const filteredData = (
-          dataSearched.length > 0 ? dataSearched : formData
+          dataSearched.length > 0 ? dataSearched : allTasks
         ).filter((item) => item.state === value);
         if (filteredData.length === 0) return;
         setData(filteredData);
         setDataFiltered(filteredData);
       }
     },
-    [dataSearched, formData]
+    [dataSearched, allTasks]
   );
 
   const handleOnDelete = useCallback(
-    (id: number | null) => {
+    ({
+      primaryTaskId,
+      incidentId,
+    }: {
+      primaryTaskId: number | null;
+      incidentId?: number;
+    }) => {
       try {
-        if (!id) {
+        if (!primaryTaskId) {
           throw new Error("No se pudo eliminar la tarea");
         }
-        deleteTask(id);
+        if (incidentId) {
+          deleteTask(primaryTaskId);
+        } else {
+          deleteTask(primaryTaskId);
+        }
         setModalStatus({ isOpen: false, id: null });
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -136,10 +150,8 @@ function Tasks() {
   );
 
   useEffect(() => {
-    setData(formData);
-  }, [formData]);
-
-  const newData = data;
+    setData(allTasks);
+  }, [allTasks]);
 
   return (
     <div className={styles.container}>
@@ -148,23 +160,48 @@ function Tasks() {
           <div className={styles.modal}>
             <div className={styles.modalHeader}>
               <IconButton
-                onClick={() => setModalStatus({ isOpen: false, id: null })}
+                onClick={() =>
+                  setModalStatus({
+                    isOpen: false,
+                    id: null,
+                    incidentId: undefined,
+                  })
+                }
               >
                 <CrossIcon />
               </IconButton>
             </div>
 
+            {modalStatus.incidentId ? undefined : (
+              <button
+                type="button"
+                className={styles.taskAction}
+                onClick={() => router.push(`/tasks/incident/${modalStatus.id}`)}
+              >
+                Crear incidencia
+              </button>
+            )}
+
             <button
               type="button"
               className={styles.taskAction}
-              onClick={() => router.push(`/tasks/${modalStatus.id}`)}
+              onClick={() =>
+                router.push(
+                  `/tasks/${modalStatus.id}${modalStatus.incidentId ? `/${modalStatus.incidentId}` : ""}`
+                )
+              }
             >
               Editar tarea
             </button>
             <button
               type="button"
               className={styles.taskAction}
-              onClick={() => handleOnDelete(modalStatus.id)}
+              onClick={() =>
+                handleOnDelete({
+                  primaryTaskId: modalStatus.id,
+                  incidentId: modalStatus.incidentId,
+                })
+              }
             >
               Eliminar tarea
             </button>
@@ -243,14 +280,44 @@ function Tasks() {
         </section>
 
         <section className={styles.tasks}>
-          {newData.length === 0 ? (
+          {data.length === 0 ? (
             <p>No hay tareas disponibles.</p>
           ) : (
-            newData.map((task) => (
+            data.map((task) => (
               <div key={task.id} className={styles.task}>
                 <div className={styles.taskContent}>
                   <h2>{task.title}</h2>
                   <p>{task.description}</p>
+                  {task.incidents ? (
+                    <div className={styles.incidentsContainer}>
+                      {task.incidents?.map((incident) => (
+                        <div key={incident.id} className={styles.incident}>
+                          <div>
+                            <p>{incident.title}</p>
+                            <p>{incident.description}</p>
+                          </div>
+                          <div>
+                            <button
+                              type="button"
+                              className={styles.taskAction}
+                              onClick={() => {
+                                if (task.id)
+                                  setModalStatus({
+                                    isOpen: true,
+                                    id: task.id,
+                                    incidentId: incident.id,
+                                  });
+                              }}
+                            >
+                              Abrir
+                            </button>
+
+                            <p>Estado: {task.state}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : undefined}
                 </div>
                 <div>
                   <button
