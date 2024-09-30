@@ -25,8 +25,8 @@ type OptionType = {
 function Incident() {
   const { setSubTask } = useFormStore();
   const params = useParams();
-
   const taskById = useTaskSelector(Number(params.id));
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<OptionType | undefined>(
     undefined
